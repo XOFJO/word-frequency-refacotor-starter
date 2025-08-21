@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.Arrays;  // Add this import
 
 public class WordFrequencyGame {
-    public String getResult(String input){
+    public String calculateWordFrequency(String input){
 
 
         if (input.split("\\s+").length==1) {
@@ -17,19 +17,19 @@ public class WordFrequencyGame {
             try {
                 String[] words = input.split("\\s+");
 
-                List<Input> wordInputs = Arrays.stream(words)
+                List<Input> inputList = Arrays.stream(words)
                         .map(s -> new Input(s, 1))
                         .collect(Collectors.toList());
 
                 //get the map for the next step of sizing the same word
-                Map<String, List<Input>> map =getListMap(wordInputs);
+                Map<String, List<Input>> map =groupWordsByValue(inputList);
 
-                wordInputs = map.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
+                inputList = map.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
 
-                wordInputs.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
+                inputList.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
 
                 StringJoiner joiner = new StringJoiner("\n");
-                wordInputs.stream().map(w -> w.getValue() + " " + w.getWordCount()).forEach(joiner::add);
+                inputList.stream().map(w -> w.getValue() + " " + w.getWordCount()).forEach(joiner::add);
                 return joiner.toString();
             } catch (Exception e) {
 
@@ -40,7 +40,7 @@ public class WordFrequencyGame {
     }
 
 
-    private Map<String,List<Input>> getListMap(List<Input> inputList) {
+    private Map<String,List<Input>> groupWordsByValue(List<Input> inputList) {
         Map<String, List<Input>> wordFrequencyMap = new HashMap<>();
         //       map.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
         inputList.forEach(input -> {
