@@ -22,9 +22,9 @@ public class WordFrequencyGame {
                         .collect(Collectors.toList());
 
                 //get the map for the next step of sizing the same word
-                Map<String, List<Input>> map =groupWordsByValue(inputList);
+                Map<String, List<Input>> groupedWords =groupWordsByValue(inputList);
 
-                inputList = map.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
+                inputList = groupedWords.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
 
                 inputList.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
 
