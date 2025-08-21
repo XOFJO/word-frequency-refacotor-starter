@@ -15,21 +15,11 @@ public class WordFrequencyGame {
         } else {
 
             try {
-                String[] words = input.split("\\s+");
+                List<Input> inputList = getInputList(input);
+                
+                Map<String, List<Input>> groupedWords = getWordFrequencyMap(inputList);
 
-                List<Input> inputList = Arrays.stream(words)
-                        .map(s -> new Input(s, 1))
-                        .collect(Collectors.toList());
-
-                //get the map for the next step of sizing the same word
-                Map<String, List<Input>> groupedWords =groupWordsByValue(inputList);
-
-                inputList = groupedWords.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
-
-                inputList.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
-
-                StringJoiner joiner = new StringJoiner("\n");
-                inputList.stream().map(w -> w.getValue() + " " + w.getWordCount()).forEach(joiner::add);
+                StringJoiner joiner = getWordFrequencyArray(groupedWords);
                 return joiner.toString();
             } catch (Exception e) {
 
@@ -39,20 +29,38 @@ public class WordFrequencyGame {
         }
     }
 
+    private static StringJoiner getWordFrequencyArray(Map<String, List<Input>> groupedWords) {
+        List<Input> inputList;
+        inputList = groupedWords.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
 
-    private Map<String,List<Input>> groupWordsByValue(List<Input> inputList) {
+        inputList.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
+
+        StringJoiner joiner = new StringJoiner("\n");
+        inputList.stream().map(w -> w.getValue() + " " + w.getWordCount()).forEach(joiner::add);
+        return joiner;
+    }
+
+    private static List<Input> getInputList(String input) {
+        String[] words = input.split("\\s+");
+
+        List<Input> inputList = Arrays.stream(words)
+                .map(s -> new Input(s, 1))
+                .collect(Collectors.toList());
+        return inputList;
+    }
+
+
+    private Map<String,List<Input>> getWordFrequencyMap(List<Input> inputList) {
         Map<String, List<Input>> wordFrequencyMap = new HashMap<>();
         inputList.forEach(input -> {
-            if (!wordFrequencyMap.containsKey(input.getValue())) {
-                ArrayList arr = new ArrayList<>();
-                arr.add(input);
-                wordFrequencyMap.put(input.getValue(), arr);
-            } else {
+            if (wordFrequencyMap.containsKey(input.getValue())) {
                 wordFrequencyMap.get(input.getValue()).add(input);
+            } else {
+                ArrayList wordGroup = new ArrayList<>();
+                wordGroup.add(input);
+                wordFrequencyMap.put(input.getValue(), wordGroup);
             }
         });
-
-
         return wordFrequencyMap;
     }
 
