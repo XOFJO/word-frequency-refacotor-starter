@@ -8,30 +8,31 @@ import java.util.Arrays;  // Add this import
 
 public class WordFrequencyGame {
     public String calculateWordFrequency(String input){
-
-
-        if (input.split("\\s+").length==1) {
+        if (isLengthOneWord(input)) {
             return input + " 1";
         } else {
 
             try {
                 List<Input> inputList = getInputList(input);
-                
-                Map<String, List<Input>> groupedWords = getWordFrequencyMap(inputList);
 
-                StringJoiner joiner = getWordFrequencyArray(groupedWords);
-                return joiner.toString();
+                Map<String, List<Input>> wordFrequencyMap = getWordFrequencyMap(inputList);
+
+                StringJoiner wordFrequencyArray = getWordFrequencyArray(wordFrequencyMap);
+
+                return wordFrequencyArray.toString();
             } catch (Exception e) {
-
-
                 return "Calculate Error";
             }
         }
     }
 
-    private static StringJoiner getWordFrequencyArray(Map<String, List<Input>> groupedWords) {
+    private static boolean isLengthOneWord(String input) {
+        return input.split("\\s+").length == 1;
+    }
+
+    private static StringJoiner getWordFrequencyArray(Map<String, List<Input>> wordFrequencyMap) {
         List<Input> inputList;
-        inputList = groupedWords.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
+        inputList = wordFrequencyMap.entrySet().stream().map(entry -> new Input(entry.getKey(), entry.getValue().size())).collect(Collectors.toList());
 
         inputList.sort((input1, input2) -> input2.getWordCount() - input1.getWordCount());
 
@@ -42,11 +43,9 @@ public class WordFrequencyGame {
 
     private static List<Input> getInputList(String input) {
         String[] words = input.split("\\s+");
-
-        List<Input> inputList = Arrays.stream(words)
+        return Arrays.stream(words)
                 .map(s -> new Input(s, 1))
                 .collect(Collectors.toList());
-        return inputList;
     }
 
 
