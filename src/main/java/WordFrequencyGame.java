@@ -42,7 +42,6 @@ public class WordFrequencyGame {
 
     private Map<String,List<Input>> groupWordsByValue(List<Input> inputList) {
         Map<String, List<Input>> wordFrequencyMap = new HashMap<>();
-        //       map.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
         inputList.forEach(input -> {
             if (!wordFrequencyMap.containsKey(input.getValue())) {
                 ArrayList arr = new ArrayList<>();
